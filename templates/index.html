@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Comando: Control de Incendios</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="main-header">
+            <h1><i class="fa-solid fa-fire-extinguisher icon"></i> SISTEMA DE MONITOREO Y CONTROL DE INCENDIOS</h1>
+            <div class="status-badge"><i class="fa-solid fa-circle-check"></i> ESTADO: ACTIVO</div>
+        </header>
+
+        <!-- Main Content Area (3 Columns Layout) -->
+        <main class="dashboard-grid">
+            
+            <!-- COLUMNA 1: Panel de Control -->
+            <section class="control-panel glass-effect">
+                <h2><i class="fa-solid fa-sliders"></i> Configuración</h2>
+                
+                <div class="scrollable-content">
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-truck-medical"></i> Capacidad Total</label>
+                        <input type="range" id="capacidad" min="5" max="50" value="20" oninput="this.nextElementSibling.value = this.value">
+                        <output>20</output>
+                    </div>
+
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-droplet"></i> Eficacia (Focos/h)</label>
+                        <input type="range" id="eficacia" min="0.1" max="2.0" step="0.1" value="0.5" oninput="this.nextElementSibling.value = this.value">
+                        <output>0.5</output>
+                    </div>
+
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-gavel"></i> Política (U/Foco)</label>
+                        <input type="range" id="politica" min="0.5" max="5.0" step="0.5" value="2.0" oninput="this.nextElementSibling.value = this.value">
+                        <output>2.0</output>
+                    </div>
+
+                    <div class="input-group">
+                        <label><i class="fa-regular fa-clock"></i> Duración (Horas)</label>
+                        <input type="number" id="duracion" value="24">
+                    </div>
+
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-satellite-dish"></i> Barrido Sat (h)</label>
+                        <input type="range" id="intervalo_barrido" min="0.5" max="6.0" step="0.5" value="1.0" oninput="this.nextElementSibling.value = this.value">
+                        <output>1.0</output>
+                    </div>
+
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-mountain-sun"></i> Escenario</label>
+                        <select id="escenario">
+                            <option value="ola_calor">Ola de Calor</option>
+                            <option value="constante">Fuego Constante</option>
+                            <option value="incremental">Crecimiento</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="btn-simular" class="btn-primary"><i class="fa-solid fa-play"></i> SIMULAR</button>
+            </section>
+
+            <!-- COLUMNA 2: Visualización Central -->
+            <section class="center-panel">
+                
+                <!-- Fila Superior: Satélite y KPIs -->
+                <div class="top-metrics">
+                    <!-- Panel Satélite -->
+                    <div class="satellite-status-bar glass-effect">
+                        <div class="sat-icon-container">
+                            <i class="fa-solid fa-satellite sat-icon"></i>
+                            <div class="sat-pulse"></div>
+                        </div>
+                        <div class="sat-info">
+                            <h3>SATÉLITE</h3>
+                            <p id="sat-status-text">EN ESPERA</p>
+                        </div>
+                        <div class="sat-metrics">
+                            <span>Barrido: <strong id="last-scan">--:--</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- KPIs Compactos -->
+                    <div class="kpi-group">
+                        <div class="kpi-card glass-effect">
+                            <h3>Pico</h3>
+                            <p id="kpi-pico">-</p>
+                        </div>
+                        <div class="kpi-card glass-effect">
+                            <h3>Final</h3>
+                            <p id="kpi-final">-</p>
+                        </div>
+                        <div class="kpi-card glass-effect">
+                            <h3>Recursos</h3>
+                            <p id="kpi-recursos">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfica Principal -->
+                <div class="chart-wrapper glass-effect" id="chartWrapper">
+                    <div class="chart-controls">
+                        <h3><i class="fa-solid fa-chart-line"></i> Dinámica del Sistema</h3>
+                        <div class="chart-actions">
+                            <button class="btn-icon" onclick="descargarDatos()" title="Descargar CSV"><i class="fa-solid fa-download"></i></button>
+                            <button class="btn-icon" onclick="toggleFullscreen()" title="Pantalla Completa"><i class="fa-solid fa-expand"></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- COLUMNA 3: Registro de Eventos (Derecha) -->
+            <section class="log-panel glass-effect" id="logWrapper">
+                <div class="log-header">
+                    <h3><i class="fa-solid fa-list-ul"></i> Eventos</h3>
+                    <div class="log-actions">
+                        <button class="btn-icon-small" onclick="descargarLog()" title="Exportar"><i class="fa-solid fa-file-export"></i></button>
+                    </div>
+                </div>
+                <div class="log-content" id="event-log-content">
+                    <div class="log-entry system">Esperando inicio...</div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- SECCIÓN NUEVA: Historial de Pruebas (Requerimiento QA) -->
+        <section class="history-panel glass-effect">
+            <div class="history-header">
+                <h3><i class="fa-solid fa-clock-rotate-left"></i> PRUEBAS DE CORRIDA (Historial x1 -> x2)</h3>
+                <button class="btn-icon-small" onclick="limpiarHistorial()" title="Limpiar Tabla"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <div class="table-container">
+                <table id="history-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ENTRADA (x1) <br><small>[Cap | Efic | Pol | Int]</small></th>
+                            <th>SALIDA (x2) <br><small>[Pico | Final | Rec]</small></th>
+                            <th>CONCLUSIÓN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Las filas se inyectarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
