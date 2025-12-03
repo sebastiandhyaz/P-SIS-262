@@ -4,64 +4,63 @@ RESUMEN EJECUTIVO: SISTEMA DE MONITOREO Y CONTROL DE INCENDIOS (SIMULADOR)
 
 1. DESCRIPCIÓN GENERAL DEL PROYECTO
 --------------------------------------------------------------------------------
-El "Sistema de Monitoreo y Control de Incendios" es una aplicación web interactiva diseñada para simular, visualizar y analizar la dinámica de gestión de recursos frente a incendios forestales. Actúa como un "Centro de Comando" virtual que permite a los usuarios probar diferentes estrategias de respuesta ante escenarios de emergencia.
+El "Sistema de Monitoreo y Control de Incendios" es una plataforma web avanzada de simulación diseñada para modelar, visualizar y analizar la gestión de recursos en escenarios de emergencia forestal. Actúa como un "Centro de Comando" (Command Center) virtual que permite a los operadores y analistas probar estrategias de respuesta ante incendios dinámicos.
 
-El sistema combina un motor matemático de simulación (Backend en Python) con una interfaz gráfica de alta fidelidad (Frontend estilo Sci-Fi/Cyberpunk), proporcionando una herramienta educativa y de análisis para la toma de decisiones.
+El sistema integra un motor matemático robusto (Backend en Python) con una interfaz de usuario de alta fidelidad (Frontend estilo Sci-Fi/Cyberpunk), ofreciendo una experiencia inmersiva para la toma de decisiones críticas bajo incertidumbre.
 
-2. OBJETIVOS DEL SISTEMA
+2. OBJETIVOS ESTRATÉGICOS
 --------------------------------------------------------------------------------
-*   **Simular Dinámicas Reales:** Modelar cómo evolucionan los incendios en función del tiempo y la intervención humana.
-*   **Optimización de Recursos:** Permitir al usuario experimentar con la cantidad de bomberos, su eficacia y las políticas de despliegue para encontrar el equilibrio óptimo.
-*   **Visualización de Datos:** Transformar modelos matemáticos abstractos en gráficos y métricas comprensibles en tiempo real.
-*   **Entrenamiento/Análisis:** Evaluar la capacidad de respuesta del sistema ante situaciones de estrés (ej. Olas de calor).
+*   **Modelado de Dinámicas Reales:** Simular la evolución no lineal de incendios basándose en variables de tiempo, clima (escenarios) e intervención humana.
+*   **Optimización de Recursos:** Permitir la experimentación con variables logísticas (cantidad de unidades, eficacia, políticas de despliegue) para maximizar la eficiencia operativa.
+*   **Análisis de Datos en Tiempo Real:** Transformar modelos matemáticos complejos en visualizaciones gráficas intuitivas e inmediatas.
+*   **Entrenamiento y QA:** Proveer herramientas para evaluar la calidad de las estrategias (Quality Assurance) mediante historiales de pruebas y comparativas de resultados.
 
 3. ARQUITECTURA TÉCNICA
 --------------------------------------------------------------------------------
 *   **Frontend (Interfaz de Usuario):**
-    *   Tecnologías: HTML5, CSS3 Avanzado (CSS Grid, Flexbox, Variables), JavaScript.
-    *   Estilo Visual: "Glassmorphism" con estética Cyberpunk (Tonos Navy/Cyan, efectos de neón, transparencias).
-    *   Librerías: Chart.js para la renderización de gráficos dinámicos.
-    *   Diseño Responsivo: Adaptable a escritorio, tablets y móviles.
+    *   **Tecnologías:** HTML5 Semántico, CSS3 Avanzado (Grid/Flexbox, Variables, Animaciones), JavaScript (ES6+).
+    *   **Diseño (UI/UX):** Estética "Cyberpunk/Glassmorphism" con paleta de colores de alto contraste (Navy Deep, Cyan Glow, Neon Blue) para reducir fatiga visual y destacar datos críticos.
+    *   **Componentes Clave:** Controles híbridos (Sliders + Inputs Numéricos), Gráficos interactivos (Chart.js), Paneles translúcidos.
+    *   **Responsividad:** Diseño fluido adaptable a monitores de alta resolución, laptops y dispositivos móviles.
 
 *   **Backend (Lógica de Negocio):**
-    *   Lenguaje: Python (Framework Flask).
-    *   Motor de Simulación: Implementación de ecuaciones diferenciales mediante el método de integración de Euler para calcular tasas de ignición vs. extinción.
-    *   API: Endpoints REST para la comunicación de parámetros y resultados entre la interfaz y el servidor.
+    *   **Core:** Python 3.x sobre Framework Flask.
+    *   **Motor Matemático:** Algoritmos de ecuaciones diferenciales (Método de Euler) para calcular tasas de ignición, detección y extinción.
+    *   **API REST:** Endpoints optimizados para la transmisión de payloads JSON entre la interfaz y el motor de simulación.
 
-4. MÓDULOS FUNCIONALES
+4. MÓDULOS FUNCIONALES DETALLADOS
 --------------------------------------------------------------------------------
 
-A. PANEL DE CONTROL (CONFIGURACIÓN)
-   Permite al usuario definir las variables críticas del sistema antes de ejecutar la simulación:
-   *   **Capacidad Total:** Número máximo de unidades/bomberos disponibles.
-   *   **Eficacia del Equipo:** Cuántos focos de incendio puede apagar una unidad por hora.
-   *   **Política de Asignación:** Cuántas unidades se envían por cada incendio detectado (agresividad de la respuesta).
-   *   **Escenarios:** Selección de situaciones predefinidas (Ola de Calor, Fuego Constante, Crecimiento Exponencial).
-   *   **Barrido Satelital:** Frecuencia con la que el sistema actualiza la información del terreno.
+A. PANEL DE CONTROL AVANZADO (CONFIGURACIÓN)
+   Interfaz dual para la definición de parámetros de simulación:
+   *   **Modo Estándar (Visual):** Sliders intuitivos para ajustes rápidos y exploración visual de rangos seguros.
+   *   **Modo Manual (Precisión):** Pestaña dedicada con inputs numéricos directos sin restricciones de rango, permitiendo pruebas de estrés (Stress Testing) y casos borde.
+   *   **Variables Controlables:** Capacidad de Recursos, Eficacia de Extinción, Política de Despliegue, Frecuencia de Barrido Satelital, Duración y Escenarios Climáticos.
 
-B. MOTOR DE VISUALIZACIÓN (DASHBOARD)
-   Presenta los resultados de la simulación de forma gráfica e intuitiva:
-   *   **Gráfica Principal:** Curvas de tiempo real que muestran la evolución de "Incendios Activos" vs. "Recursos Desplegados".
-   *   **KPIs (Indicadores Clave):** Tarjetas de alto impacto que muestran:
-       - Pico Máximo de Incendios.
-       - Incendios Finales (al terminar la simulación).
-       - Uso de Recursos (Saturación).
-   *   **Simulación Satelital:** Indicador visual animado que simula el paso de un satélite y la actualización de datos.
+B. DASHBOARD DE VISUALIZACIÓN (MONITOREO)
+   Centro neurálgico de información que presenta los resultados en tiempo real:
+   *   **Gráfica Dinámica:** Visualización multicapa que contrasta "Incendios Reales" (Curva Roja), "Datos Satelitales" (Escalones Verdes) y "Recursos Desplegados" (Área Azul).
+   *   **KPIs de Alto Impacto:** Métricas instantáneas de Pico de Incendios, Estado Final y Saturación de Recursos.
+   *   **Simulación Satelital:** Indicador de estado con animaciones de pulso que representa la latencia y actualización de datos del barrido orbital.
 
-C. BITÁCORA DE EVENTOS (LOGS)
-   Un panel de registro detallado que narra cronológicamente lo que sucede en la simulación:
-   *   Inicio y fin de la simulación.
-   *   Alertas de saturación de recursos.
-   *   Momentos de barrido satelital.
-   *   Hitos críticos (ej. "Pico de incendios alcanzado").
-   *   Capacidad de exportación de datos.
+C. GESTOR DE EVENTOS (LOGS)
+   Bitácora automatizada que registra la cronología de la emergencia:
+   *   Registro detallado minuto a minuto.
+   *   Categorización visual de eventos (Info, Alerta, Peligro) mediante códigos de color.
+   *   Capacidad de exportación de logs para auditoría externa.
 
-5. CARACTERÍSTICAS DESTACADAS DE UX/UI
+D. HISTORIAL DE CALIDAD (QA)
+   Módulo de persistencia temporal para el análisis comparativo:
+   *   Tabla dinámica que registra cada ejecución (corrida) de la simulación.
+   *   Comparativa directa de "Inputs" (Configuración) vs "Outputs" (Resultados).
+   *   Evaluación automática del desempeño (Éxito/Fallo) con indicadores visuales (Badges).
+
+5. INNOVACIONES DE INTERFAZ (UI/UX)
 --------------------------------------------------------------------------------
-*   **Interfaz Inmersiva:** Uso de sombras 3D, bordes brillantes y fondos oscuros para reducir la fatiga visual y mejorar el enfoque en los datos.
-*   **Layout Inteligente:** Distribución en 3 columnas (Control - Visualización - Logs) que se adapta fluidamente a diferentes tamaños de pantalla sin deformarse.
-*   **Feedback Visual:** Botones interactivos con estados (hover/active), animaciones de pulso en el satélite y scrollbars personalizados.
+*   **Estética Inmersiva:** Uso de sombras 3D, efectos de cristal (Glassmorphism) y tipografías técnicas (Rajdhani/Inter) para una experiencia profesional.
+*   **Controles Híbridos:** Solución de diseño que combina la facilidad de uso de los sliders con la precisión de los campos numéricos.
+*   **Feedback Inmediato:** El sistema responde visualmente a cada acción del usuario, desde la carga de datos hasta la finalización de la simulación.
 
 6. CONCLUSIÓN
 --------------------------------------------------------------------------------
-Este software representa una solución completa para la simulación de gestión de crisis de incendios. No solo calcula resultados numéricos, sino que ofrece una experiencia de usuario pulida que facilita la comprensión de cómo las decisiones estratégicas (políticas de recursos) impactan directamente en el control de una emergencia.
+El Sistema de Monitoreo y Control de Incendios trasciende la simple calculadora matemática para convertirse en una herramienta de simulación integral. Su arquitectura modular, combinada con una interfaz de usuario pulida y funcional, permite a los usuarios comprender profundamente las complejas interacciones entre los recursos limitados y las emergencias dinámicas, facilitando la toma de decisiones basada en datos.

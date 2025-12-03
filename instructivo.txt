@@ -1,0 +1,91 @@
+================================================================================
+MANUAL DE USUARIO: SISTEMA DE MONITOREO Y CONTROL DE INCENDIOS
+================================================================================
+
+¡Bienvenido al Centro de Comando!
+Este sistema es un simulador avanzado que te permite actuar como el Jefe de Operaciones en una emergencia de incendios forestales. Tu misión es configurar los recursos disponibles para controlar el fuego antes de que se salga de control.
+
+Sigue esta guía paso a paso para aprender a utilizar la herramienta.
+
+--------------------------------------------------------------------------------
+PASO 1: ENTENDIENDO LA INTERFAZ
+--------------------------------------------------------------------------------
+La pantalla está dividida en 3 secciones principales (de izquierda a derecha en PC, o de arriba a abajo en móvil):
+
+1.  **PANEL DE CONTROL (Izquierda):** Aquí es donde tomas las decisiones. Es tu tablero de mando.
+2.  **VISUALIZACIÓN CENTRAL (Centro):** Aquí ves el resultado de tus decisiones. Incluye el estado del satélite, indicadores clave (KPIs) y la gráfica principal.
+3.  **GESTOR DE EVENTOS (Derecha):** Un registro escrito de todo lo que ocurre minuto a minuto.
+
+--------------------------------------------------------------------------------
+PASO 2: CONFIGURACIÓN DE LA SIMULACIÓN (Tus Decisiones)
+--------------------------------------------------------------------------------
+El panel de control tiene dos modos de operación. Elige el que prefieras usando las pestañas superiores:
+
+A. MODO ESTÁNDAR (Pestaña "Estándar")
+   Usa los deslizadores (sliders) para ajustar los valores de forma visual y rápida dentro de rangos seguros.
+
+B. MODO MANUAL (Pestaña "Manual")
+   Usa los campos de texto para ingresar valores numéricos exactos.
+   *   *Nota:* Este modo NO tiene límites. Puedes poner valores extremos para probar la resistencia del sistema.
+
+VARIABLES A CONFIGURAR:
+1.  **Capacidad Total (Camiones/Unidades):**
+    *   *¿Qué es?* La cantidad máxima de bomberos o camiones que tienes en tu base.
+    *   *Ejemplo:* Si pones "20", nunca podrás enviar más de 20 unidades.
+
+2.  **Eficacia del Equipo (Focos/hora):**
+    *   *¿Qué es?* Qué tan buenos son tus bomberos apagando el fuego.
+    *   *Valor bajo (0.5):* Equipos novatos.
+    *   *Valor alto (2.0):* Equipos de élite.
+
+3.  **Política de Asignación (Unidades por Foco):**
+    *   *¿Qué es?* Tu agresividad. ¿Cuántos camiones envías por cada incendio que ves?
+    *   *Estrategia:* Si envías muchos (ej. 4.0), apagarás rápido el fuego, pero te quedarás sin recursos muy pronto.
+
+4.  **Barrido Satelital (Horas):**
+    *   *¿Qué es?* Cada cuánto tiempo pasa el satélite para actualizar el mapa.
+    *   *Importante:* Si el satélite pasa cada 6 horas, estarás "ciego" mucho tiempo.
+
+5.  **Escenario:**
+    *   *Ola de Calor:* El fuego empieza suave, explota a mitad del día y luego baja.
+    *   *Fuego Constante:* El fuego aparece siempre a la misma velocidad.
+    *   *Crecimiento:* El fuego empeora cada hora que pasa.
+
+--------------------------------------------------------------------------------
+PASO 3: EJECUTAR Y OBSERVAR
+--------------------------------------------------------------------------------
+1.  Haz clic en el botón grande **"EJECUTAR SIMULACIÓN"**.
+2.  Observa la **Gráfica Central**:
+    *   **Línea Roja:** Es el fuego real. Si sube mucho, estás en problemas.
+    *   **Línea Azul:** Son tus recursos. Si llega al tope plano, significa que te quedaste sin bomberos (Saturación).
+    *   **Línea Verde Punteada:** Es lo que "ve" el satélite. Fíjate cómo se actualiza a saltos (escalones).
+
+--------------------------------------------------------------------------------
+PASO 4: INTERPRETAR LOS RESULTADOS (KPIs)
+--------------------------------------------------------------------------------
+Mira las tarjetas numéricas arriba de la gráfica:
+
+*   **PICO:** El número máximo de incendios que hubo al mismo tiempo. (Menos es mejor).
+*   **FINAL:** Cuántos incendios quedaron activos al terminar el día.
+    *   *Objetivo:* Que este número sea cercano a 0.
+*   **RECURSOS:** Cuántas unidades usaste como máximo.
+    *   *Alerta:* Si este número es igual a tu "Capacidad Total", significa que el sistema colapsó por falta de recursos.
+
+--------------------------------------------------------------------------------
+PASO 5: HISTORIAL DE PRUEBAS (Mejora Continua)
+--------------------------------------------------------------------------------
+Baja al final de la página a la sección "PRUEBAS DE CORRIDA".
+Cada vez que simules, se guardará una fila aquí automáticamente.
+
+*   **¿Cómo usarlo?**
+    1.  Haz una prueba con pocos bomberos -> Mira si fallas (Badge Rojo "CRÍTICO").
+    2.  Aumenta los bomberos y simula de nuevo -> Mira si tienes éxito (Badge Verde "EXITOSO").
+    3.  Compara las filas para ver cuál fue la configuración más eficiente.
+
+--------------------------------------------------------------------------------
+CONSEJOS DE ESTRATEGIA
+--------------------------------------------------------------------------------
+*   **El Satélite es Clave:** Si configuras un barrido muy lento (ej. 6 horas), tu respuesta será tardía. Intenta bajarlo a 1.0 o 0.5 horas.
+*   **Cuidado con la Agresividad:** Una "Política" muy alta (enviar 5 camiones por foco) agota tus reservas en minutos. A veces es mejor enviar menos (2.0) pero de forma constante.
+
+¡Buena suerte, Comandante!

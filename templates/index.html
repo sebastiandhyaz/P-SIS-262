@@ -24,42 +24,88 @@
         <main class="dashboard-grid">
             
             <!-- COLUMNA 1: Panel de Control -->
-            <section class="control-panel glass-effect">
-                <h2><i class="fa-solid fa-sliders"></i> Configuración</h2>
+                        <!-- COLUMNA 1: Panel de Control (Izquierda) -->
+            <section class="config-panel glass-effect">
                 
-                <div class="scrollable-content">
-                    <div class="input-group">
-                        <label><i class="fa-solid fa-truck-medical"></i> Capacidad Total</label>
-                        <input type="range" id="capacidad" min="5" max="50" value="20" oninput="this.nextElementSibling.value = this.value">
-                        <output>20</output>
-                    </div>
+                <!-- TABS HEADER -->
+                <div class="tab-header">
+                    <button class="tab-btn active" onclick="switchTab('tab-sliders')"><i class="fa-solid fa-sliders"></i> Estándar</button>
+                    <button class="tab-btn" onclick="switchTab('tab-manual')"><i class="fa-solid fa-keyboard"></i> Manual</button>
+                </div>
 
-                    <div class="input-group">
-                        <label><i class="fa-solid fa-droplet"></i> Eficacia (Focos/h)</label>
-                        <input type="range" id="eficacia" min="0.1" max="2.0" step="0.1" value="0.5" oninput="this.nextElementSibling.value = this.value">
-                        <output>0.5</output>
-                    </div>
+                <!-- TAB 1: CONFIGURACIÓN ESTÁNDAR (Sliders Originales) -->
+                <div id="tab-sliders" class="tab-content active">
+                    <h2><i class="fa-solid fa-sliders"></i> Configuración</h2>
+                    <div class="controls-grid">
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-fire-extinguisher"></i> Capacidad (Recursos)</label>
+                            <div class="slider-container">
+                                <input type="range" id="capacidad" min="10" max="200" step="5" value="50">
+                                <span id="val-capacidad" class="slider-value">50</span>
+                            </div>
+                        </div>
 
-                    <div class="input-group">
-                        <label><i class="fa-solid fa-gavel"></i> Política (U/Foco)</label>
-                        <input type="range" id="politica" min="0.5" max="5.0" step="0.5" value="2.0" oninput="this.nextElementSibling.value = this.value">
-                        <output>2.0</output>
-                    </div>
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-droplet"></i> Eficacia (0-1)</label>
+                            <div class="slider-container">
+                                <input type="range" id="eficacia" min="0.1" max="1.0" step="0.05" value="0.7">
+                                <span id="val-eficacia" class="slider-value">0.7</span>
+                            </div>
+                        </div>
 
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-gavel"></i> Política (Umbral)</label>
+                            <div class="slider-container">
+                                <input type="range" id="politica" min="0.5" max="5.0" step="0.5" value="2.0">
+                                <span id="val-politica" class="slider-value">2.0</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-satellite-dish"></i> Barrido Sat (h)</label>
+                            <div class="slider-container">
+                                <input type="range" id="intervalo_barrido" min="0.5" max="6.0" step="0.5" value="1.0">
+                                <span id="val-intervalo_barrido" class="slider-value">1.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: ENTRADA MANUAL (Sin Límites) -->
+                <div id="tab-manual" class="tab-content" style="display: none;">
+                    <h2><i class="fa-solid fa-terminal"></i> Entrada Manual</h2>
+                    <p class="manual-hint">Ingrese valores exactos sin restricciones de rango.</p>
+                    
+                    <div class="controls-grid">
+                        <div class="input-group">
+                            <label>Capacidad</label>
+                            <input type="number" id="manual_capacidad" class="cyber-input full-width" placeholder="Ej: 500">
+                        </div>
+                        <div class="input-group">
+                            <label>Eficacia</label>
+                            <input type="number" id="manual_eficacia" class="cyber-input full-width" step="0.01" placeholder="Ej: 1.5">
+                        </div>
+                        <div class="input-group">
+                            <label>Política</label>
+                            <input type="number" id="manual_politica" class="cyber-input full-width" step="0.1" placeholder="Ej: 10.0">
+                        </div>
+                        <div class="input-group">
+                            <label>Barrido (h)</label>
+                            <input type="number" id="manual_intervalo_barrido" class="cyber-input full-width" step="0.1" placeholder="Ej: 0.1">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTROLES COMUNES -->
+                <div class="common-controls">
                     <div class="input-group">
                         <label><i class="fa-regular fa-clock"></i> Duración (Horas)</label>
-                        <input type="number" id="duracion" value="24">
-                    </div>
-
-                    <div class="input-group">
-                        <label><i class="fa-solid fa-satellite-dish"></i> Barrido Sat (h)</label>
-                        <input type="range" id="intervalo_barrido" min="0.5" max="6.0" step="0.5" value="1.0" oninput="this.nextElementSibling.value = this.value">
-                        <output>1.0</output>
+                        <input type="number" id="duracion" value="24" class="cyber-input full-width">
                     </div>
 
                     <div class="input-group">
                         <label><i class="fa-solid fa-mountain-sun"></i> Escenario</label>
-                        <select id="escenario">
+                        <select id="escenario" class="cyber-input full-width">
                             <option value="ola_calor">Ola de Calor</option>
                             <option value="constante">Fuego Constante</option>
                             <option value="incremental">Crecimiento</option>
@@ -67,7 +113,7 @@
                     </div>
                 </div>
 
-                <button id="btn-simular" class="btn-primary"><i class="fa-solid fa-play"></i> SIMULAR</button>
+                <button id="btn-simular" class="btn-primary"><i class="fa-solid fa-play"></i> EJECUTAR SIMULACIÓN</button>
             </section>
 
             <!-- COLUMNA 2: Visualización Central -->

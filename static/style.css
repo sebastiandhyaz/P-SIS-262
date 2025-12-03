@@ -63,6 +63,7 @@ body {
 
 .app-container {
     width: 98vw;
+    max-width: 1800px; /* Límite para pantallas ultra anchas */
     min-height: 100vh; /* CORRECCIÓN: Permitir crecimiento natural */
     height: auto;
     display: flex;
@@ -223,8 +224,15 @@ h2, h3 {
     color: var(--cyan-glow);
 }
 
+/* Contenedor híbrido Slider + Input */
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 input[type="range"] {
-    width: 100%;
+    flex: 1; /* Ocupa el espacio restante */
     cursor: pointer;
     accent-color: var(--cyan-glow);
     height: 6px;
@@ -232,7 +240,46 @@ input[type="range"] {
     border-radius: 3px;
 }
 
-input[type="number"], select {
+/* Estilo Cyberpunk para Inputs Numéricos */
+.cyber-input {
+    background: #0b1221;
+    border: 1px solid rgba(0, 242, 255, 0.3);
+    color: var(--cyan-glow);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
+    width: 80px; /* Ancho fijo para alineación */
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.cyber-input:focus {
+    outline: none;
+    border-color: var(--cyan-glow);
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+}
+
+.cyber-input.full-width {
+    width: 100%;
+}
+
+/* Eliminar flechas del input number (Chrome/Safari/Edge) */
+.cyber-input::-webkit-outer-spin-button,
+.cyber-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Eliminar flechas del input number (Firefox) */
+.cyber-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Estilo antiguo (se mantiene por compatibilidad si algo falla) */
+select {
     background: #0b1221;
     border: 1px solid rgba(0, 242, 255, 0.2);
     color: var(--cyan-glow);
@@ -243,16 +290,62 @@ input[type="number"], select {
     font-weight: bold;
     box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
 }
-
-output {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    text-align: right;
     color: var(--cyan-glow);
     font-weight: 700;
     text-shadow: 0 0 8px rgba(0, 242, 255, 0.4);
 }
 
+/* --- TABS STYLE --- */
+.tab-header {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+}
+
+.tab-btn {
+    background: rgba(10, 25, 47, 0.5);
+    border: 1px solid rgba(0, 242, 255, 0.1);
+    border-bottom: none;
+    color: var(--text-muted);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.tab-btn:hover {
+    background: rgba(0, 242, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.tab-btn.active {
+    background: rgba(0, 242, 255, 0.1);
+    color: var(--cyan-glow);
+    border-color: rgba(0, 242, 255, 0.3);
+    box-shadow: 0 -2px 10px rgba(0, 242, 255, 0.1);
+}
+
+.manual-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.slider-value {
+    display: inline-block;
+    width: 50px;
+    text-align: right;
+    color: var(--cyan-glow);
+    font-weight: bold;
+    font-family: var(--font-mono);
+}
+
+/* --- BUTTON RESTORED (CURVED 3D) --- */
 .btn-primary {
     /* Gradiente de 3 colores RGBA para efecto profundo */
     background: linear-gradient(135deg, 
@@ -263,7 +356,7 @@ output {
     color: white;
     border: none;
     padding: 18px;
-    border-radius: 50px; /* Mucho más curvo (Pill shape) */
+    border-radius: 50px; /* Pill shape */
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 1.2rem;
@@ -282,10 +375,12 @@ output {
         inset 0 -5px 10px rgba(0, 0, 0, 0.3), /* Sombra interna abajo */
         inset 0 2px 4px rgba(255, 255, 255, 0.3); /* Brillo interno arriba */
         
-    margin-top: auto;
+    margin-top: auto; /* Empujar al fondo */
     border: 1px solid rgba(255,255,255,0.1);
     position: relative;
     overflow: hidden;
+    width: 100%; /* Asegurar que no se salga */
+    box-sizing: border-box; /* Incluir padding en el ancho */
 }
 
 .btn-primary:hover {
@@ -308,6 +403,54 @@ output {
     box-shadow: 
         0 2px 5px rgba(0, 0, 0, 0.4),
         inset 0 5px 10px rgba(0, 0, 0, 0.4); /* Efecto presionado */
+}
+
+/* --- CONFIG PANEL LAYOUT --- */
+.config-panel {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow: hidden;
+}
+
+.controls-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px; /* Espacio para scrollbar */
+}
+
+/* Estilo para inputs manuales */
+.cyber-input {
+    background: rgba(10, 25, 47, 0.6);
+    border: 1px solid rgba(0, 242, 255, 0.2);
+    color: var(--cyan-glow);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.cyber-input:focus {
+    outline: none;
+    border-color: var(--cyan-glow);
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+    background: rgba(10, 25, 47, 0.8);
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 /* Visualización */
@@ -463,7 +606,7 @@ output {
     display: flex;
     flex-direction: column;
     height: auto;
-    max-height: 80vh; /* Límite de altura para evitar crecimiento infinito */
+    max-height: 100%; /* Ajustar al contenedor padre */
     overflow: hidden; /* El scroll lo maneja .log-content */
 }
 
@@ -477,6 +620,31 @@ output {
     flex-shrink: 0; /* No encoger header */
 }
 
+.log-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.log-entry {
+    padding: 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid transparent;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    animation: fadeIn 0.3s ease;
+}
+
+.log-entry.system { border-color: var(--text-muted); color: var(--text-muted); }
+.log-entry.info { border-color: var(--cyan-glow); color: var(--text-primary); }
+.log-entry.warning { border-color: #f59e0b; color: #fcd34d; background: rgba(245, 158, 11, 0.1); }
+.log-entry.danger { border-color: #ef4444; color: #fca5a5; background: rgba(239, 68, 68, 0.1); }
+
+/* --- SATELLITE & KPI FIXES --- */
 .satellite-status-bar {
     flex: 1.4;
     height: 120px; /* Altura fija */
@@ -790,4 +958,44 @@ output {
     color: #ef4444;
     font-weight: bold;
     text-shadow: 0 0 5px rgba(239, 68, 68, 0.4);
+}
+
+/* Badges para Historial */
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #0f172a; /* Texto oscuro para contraste */
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+}
+
+.status-ok {
+    background-color: #10b981; /* Verde */
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.status-warning {
+    background-color: #f59e0b; /* Amarillo */
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+.status-danger {
+    background-color: #ef4444; /* Rojo */
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+.data-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.data-cell span {
+    white-space: nowrap;
 }

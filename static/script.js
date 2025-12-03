@@ -1,20 +1,74 @@
 let myChart = null;
 let lastSimulationData = null; // Para descargas
 let simulationCount = 0; // Contador de pruebas
+let currentTab = 'tab-sliders'; // Tab por defecto
+
+// Función global para cambiar tabs
+function switchTab(tabId) {
+    currentTab = tabId;
+    
+    // Actualizar botones
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        // Simple check para ver si es el botón clickeado
+        if (btn.getAttribute('onclick').includes(tabId)) {
+            btn.classList.add('active');
+        }
+    });
+
+    // Actualizar contenido
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.style.display = 'none';
+        content.classList.remove('active');
+    });
+    
+    const activeContent = document.getElementById(tabId);
+    if (activeContent) {
+        activeContent.style.display = 'block';
+        activeContent.classList.add('active');
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- INICIALIZACIÓN DE SLIDERS (Actualizar etiquetas de valor) ---
+    ['capacidad', 'eficacia', 'politica', 'intervalo_barrido'].forEach(id => {
+        const slider = document.getElementById(id);
+        const display = document.getElementById('val-' + id);
+        if(slider && display) {
+            slider.addEventListener('input', () => {
+                display.textContent = slider.value;
+            });
+        }
+    });
+
     const btnSimular = document.getElementById('btn-simular');
     
     btnSimular.addEventListener('click', async () => {
-        // 1. Recolectar datos del formulario
-        const payload = {
-            capacidad: parseFloat(document.getElementById('capacidad').value),
-            eficacia: parseFloat(document.getElementById('eficacia').value),
-            politica: parseFloat(document.getElementById('politica').value),
-            duracion: parseInt(document.getElementById('duracion').value),
-            escenario: document.getElementById('escenario').value,
-            intervalo_barrido: parseFloat(document.getElementById('intervalo_barrido').value)
-        };
+        let payload = {};
+
+        // 1. Recolectar datos según el TAB ACTIVO
+        if (currentTab === 'tab-sliders') {
+            // Modo Estándar (Sliders)
+            payload = {
+                capacidad: parseFloat(document.getElementById('capacidad').value),
+                eficacia: parseFloat(document.getElementById('eficacia').value),
+                politica: parseFloat(document.getElementById('politica').value),
+                intervalo_barrido: parseFloat(document.getElementById('intervalo_barrido').value),
+                duracion: parseInt(document.getElementById('duracion').value),
+                escenario: document.getElementById('escenario').value
+            };
+        } else {
+            // Modo Manual (Inputs sin límites)
+            // Usamos || 0 para evitar NaN si está vacío, pero permitimos cualquier valor
+            payload = {
+                capacidad: parseFloat(document.getElementById('manual_capacidad').value) || 0,
+                eficacia: parseFloat(document.getElementById('manual_eficacia').value) || 0,
+                politica: parseFloat(document.getElementById('manual_politica').value) || 0,
+                intervalo_barrido: parseFloat(document.getElementById('manual_intervalo_barrido').value) || 0,
+                duracion: parseInt(document.getElementById('duracion').value),
+                escenario: document.getElementById('escenario').value
+            };
+        }
 
         // 2. Llamar a la API
         try {
@@ -60,9 +114,11 @@ function actualizarKPIs(data) {
     const finalIncendios = data.incendios[data.incendios.length - 1];
     const maxRecursos = Math.max(...data.recursos);
 
-    document.getElementById('kpi-pico').textContent = maxIncendios.toFixed(2);
-    document.getElementById('kpi-final').textContent = finalIncendios.toFixed(2);
-    document.getElementById('kpi-recursos').textContent = maxRecursos.toFixed(2);
+    // Formateo de unidades: Recursos e Incendios suelen ser enteros o con 1 decimal si es promedio
+    // El usuario se quejó de "fallas en las unidades", así que usaremos enteros para recursos si es posible, o 1 decimal.
+    document.getElementById('kpi-pico').textContent = maxIncendios.toFixed(0); // Focos enteros
+    document.getElementById('kpi-final').textContent = finalIncendios.toFixed(0); // Focos enteros
+    document.getElementById('kpi-recursos').textContent = maxRecursos.toFixed(0); // Unidades enteras
 }
 
 function renderizarLog(eventos) {
@@ -274,43 +330,55 @@ function descargarLog() {
     document.body.removeChild(link);
 }
 
-// --- HISTORIAL DE PRUEBAS (QA) ---
+// --- FUNCIONES PARA HISTORIAL ---
 
-function agregarFilaHistorial(entrada, salida) {
+function agregarFilaHistorial(inputs, results) {
     simulationCount++;
     const tbody = document.querySelector('#history-table tbody');
-    
-    // Calcular métricas de salida
-    const maxIncendios = Math.max(...salida.incendios).toFixed(2);
-    const finalIncendios = salida.incendios[salida.incendios.length - 1].toFixed(2);
-    const maxRecursos = Math.max(...salida.recursos).toFixed(2);
-    
-    // Determinar éxito/fallo
-    const exito = parseFloat(finalIncendios) < 1.0;
-    const conclusionHtml = exito 
-        ? '<span class="status-success"><i class="fa-solid fa-check"></i> ÉXITO (Controlado)</span>' 
-        : '<span class="status-fail"><i class="fa-solid fa-xmark"></i> FALLO (Descontrol)</span>';
-
     const row = document.createElement('tr');
+
+    // Lógica simple para conclusión
+    const finalIncendios = results.incendios[results.incendios.length - 1];
+    let conclusion = "";
+    let conclusionClass = "";
+
+    if (finalIncendios < 5) {
+        conclusion = "EXITOSO";
+        conclusionClass = "status-ok";
+    } else if (finalIncendios < 20) {
+        conclusion = "ACEPTABLE";
+        conclusionClass = "status-warning";
+    } else {
+        conclusion = "CRÍTICO";
+        conclusionClass = "status-danger";
+    }
+
     row.innerHTML = `
-        <td><strong>#${simulationCount}</strong></td>
+        <td>#${simulationCount}</td>
         <td>
-            C:${entrada.capacidad} | E:${entrada.eficacia} | P:${entrada.politica} | I:${entrada.intervalo_barrido}
+            <div class="data-cell">
+                <span>C:${inputs.capacidad}</span>
+                <span>E:${inputs.eficacia}</span>
+                <span>P:${inputs.politica}</span>
+                <span>I:${inputs.intervalo_barrido}</span>
+            </div>
         </td>
         <td>
-            Pico: ${maxIncendios} | Fin: ${finalIncendios} | Rec: ${maxRecursos}
+            <div class="data-cell">
+                <span>Pico: ${Math.max(...results.incendios).toFixed(1)}</span>
+                <span>Fin: ${finalIncendios.toFixed(1)}</span>
+                <span>Rec: ${Math.max(...results.recursos).toFixed(1)}</span>
+            </div>
         </td>
-        <td>${conclusionHtml}</td>
+        <td><span class="badge ${conclusionClass}">${conclusion}</span></td>
     `;
-    
-    // Insertar al principio para ver la más reciente arriba (o al final si prefieres orden cronológico)
-    // El usuario pidió "una debajo de otra", así que appendChild es correcto.
-    tbody.appendChild(row);
+
+    // Insertar al principio
+    tbody.insertBefore(row, tbody.firstChild);
 }
 
 function limpiarHistorial() {
-    if(confirm('¿Borrar todo el historial de pruebas?')) {
-        document.querySelector('#history-table tbody').innerHTML = '';
-        simulationCount = 0;
-    }
+    const tbody = document.querySelector('#history-table tbody');
+    tbody.innerHTML = '';
+    simulationCount = 0;
 }
